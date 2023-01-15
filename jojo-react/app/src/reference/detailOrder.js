@@ -1,0 +1,18 @@
+const data = {
+  company_id: 0,
+  created_at: 1673629200000,
+  created_by: 0,
+  harga: 10000,
+  id: "mUGj7X24g",
+  id_buyer: { id: "4KZj7X24g", name: "LSI ANTAPANI BANDUNG" },
+  id_detail_order: "mUGj7X24g",
+  id_order: { id: "P6ij7Xh4g", name: "WW2XI0421" },
+  id_produk: { id: "LtGjnuhVR", name: "LOBAK BESAR DAIKON  WHL" },
+  jumlah_barang: 1000,
+  nama_produk: "LOBAK BESAR DAIKON  WHL",
+  tanggal: 1668790800000,
+  total: 10000,
+  unit: "KG",
+  updated_at: 1673709383426,
+  updated_by: 0,
+};

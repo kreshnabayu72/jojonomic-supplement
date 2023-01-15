@@ -1,0 +1,63 @@
+"po": {
+    "po_detail": [
+        {
+            "barcode": "",
+            "bonus1": 0,
+            "bonus2": 0,
+            "conversion": 1000,
+            "description": "JAGUNG BIASA  WHL",
+            "discount": 0,
+            "package": 0,
+            "plu": 5400022,
+            "ppn": 0,
+            "ppnbm": 0,
+            "price": 10500,
+            "qty": 2000,
+            "total": 21000,
+            "unit": "KG"
+        },
+        {
+            "barcode": "",
+            "bonus1": 0,
+            "bonus2": 0,
+            "conversion": 1000,
+            "description": "LOBAK BESAR DAIKON  WHL",
+            "discount": 0,
+            "package": 0,
+            "plu": 5400377,
+            "ppn": 0,
+            "ppnbm": 0,
+            "price": 10000,
+            "qty": 1000,
+            "total": 10000,
+            "unit": "KG"
+        }
+    ],
+    "po_footer": {
+        "address": "JL. TERUSAN JAKARTA NO.225;BANDUNG;",
+        "announcement": "",
+        "delivery": "",
+        "expired": "22-Nov-2022",
+        "note": 19,
+        "orderby": "LSI",
+        "pb_no": "WTBD2KI01",
+        "po_division": "",
+        "store": "ANTAPANI BANDUNG",
+        "store_id": 63,
+        "tax_address": "GEDUNG PERKANTORAN BIDAKARA 2 LT. 19-22;JL. JENDERAL GATOT SUBROTO KAV.71-73;MENTENG DALAM-TEBET, JAKARTA SELATAN",
+        "tax_name": "PT. LION SUPER INDO",
+        "tax_npwp": "01.781.372.6-046.000",
+        "telp": "0227215161 / 7215160"
+    },
+    "po_head": {
+        "po_date": 1668790800000,
+        "po_no": "WW2XI0421",
+        "supp_Contact": "PAK FUAD AFANDI / YUDA",
+        "supp_code": "P1240",
+        "supp_fax": 85920526,
+        "supp_name": "PONDOK PESANTREN AL-ITTIFAQ",
+        "supp_pkp": "PTKP",
+        "supp_telp": 2285920526,
+        "top_sup": 21
+    }
+}
