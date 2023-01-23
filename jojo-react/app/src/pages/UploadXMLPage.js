@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { XMLParser } from "fast-xml-parser";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function UploadXMLPage() {
   const [file, setFile] = useState();
@@ -8,6 +9,8 @@ function UploadXMLPage() {
   const [dataIsLoaded, setDataIsLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [XMLString, setXMLString] = useState();
+
+  const nav = useNavigate();
 
   const reader = new FileReader();
   reader.onload = async (e) => {
@@ -48,6 +51,7 @@ function UploadXMLPage() {
       );
       alert("Submitted Data!");
       setLoading(false);
+      nav("/");
     } else {
       alert("Data not loaded, cant submit!");
       console.log("data not loaded");
@@ -55,7 +59,7 @@ function UploadXMLPage() {
   };
 
   const Loading = () => {
-    if (loading) return <h1>Submitting...</h1>;
+    if (loading) return <h1>Submitting... Tunggu sampai selesai</h1>;
   };
 
   const IsDataLoaded = () => {

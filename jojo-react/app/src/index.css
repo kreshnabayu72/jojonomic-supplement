@@ -36,3 +36,11 @@ table, th, td {
 .hover-pointer:hover{
   text-decoration: underline;
 }
+
+.warning{
+  color:rgb(208, 62, 62)
+}
+
+.success{
+  color: rgb(61, 151, 61);
+}

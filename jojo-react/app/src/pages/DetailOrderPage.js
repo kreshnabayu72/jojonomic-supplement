@@ -29,7 +29,7 @@ function DetailOrderPage() {
       let btb = list.map((detailOrder, index) => {
         return {
           No: index + 1,
-          plu: "BLOM",
+          plu: detailOrder.plu,
           Barang: detailOrder.nama_produk,
           unit: detailOrder.unit,
           QTY: detailOrder.jumlah_barang,
@@ -39,18 +39,31 @@ function DetailOrderPage() {
         };
       });
       setDataBTB(btb);
+      let faktur = list.map((detailOrder, index) => {
+        return {
+          No: index + 1,
+          plu: detailOrder.plu,
+          Barang: detailOrder.nama_produk,
+          unit: detailOrder.unit,
+          QTY: detailOrder.jumlah_barang,
+
+          harga: detailOrder.harga,
+          jumlah: detailOrder.total,
+        };
+      });
+      setDataFaktur(faktur);
     }
   }, [list]);
 
-  const ExportExcel = (excelData) => {
+  const ExportExcel = (excelData, name) => {
     const fileType =
       "application/vnc.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const exportToExcel = async () => {
       const ws = XLSX.utils.json_to_sheet(excelData);
-      const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+      const wb = { Sheets: { data: ws }, SheetNames: ["data"] }; //sheetnamesnya kalo diganti jadi kosong (?????)
       const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
       const data = await new Blob([excelBuffer], { type: fileType });
-      FileSaver.saveAs(data, `${list[0].id_order.name}.xlsx`);
+      FileSaver.saveAs(data, `${list[0].id_order.name}-${name}.xlsx`);
     };
     exportToExcel();
   };
@@ -65,6 +78,7 @@ function DetailOrderPage() {
             <td>{detail.id_order.name}</td>
             <td>{detail.id_buyer.name}</td>
             <td>{detail.id_produk.name}</td>
+            <td>{detail.plu}</td>
             <td>{detail.harga}</td>
             <td>{detail.jumlah_barang}</td>
             <td>{detail.unit}</td>
@@ -86,6 +100,7 @@ function DetailOrderPage() {
             <th>NomorPO</th>
             <th>Buyer</th>
             <th>Produk</th>
+            <th>PLU</th>
             <th>Harga</th>
             <th>Jumlah Barang</th>
             <th>Unit</th>
@@ -96,7 +111,9 @@ function DetailOrderPage() {
           <DetailOrderList />
         </tbody>
       </table>
-      <button onClick={() => ExportExcel(dataBTB)}>EXCEL?</button>
+      <h1>Download:</h1>
+      <button onClick={() => ExportExcel(dataBTB, "BTB")}>BTB</button>
+      <button onClick={() => ExportExcel(dataFaktur, "Faktur")}>Faktur</button>
     </>
   );
 }

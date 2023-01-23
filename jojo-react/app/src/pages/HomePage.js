@@ -4,23 +4,25 @@ import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const [order, setOrder] = useState([]);
+  const [loadingOrder, setLoadingOrder] = useState(false);
 
   const nav = useNavigate();
 
   useEffect(() => {
     const fetchOrder = async () => {
+      setLoadingOrder(true);
       const result = await axios.get(
         "https://gateway.jojonomic.com/v1/nocode/api/ims/order"
       );
+      setLoadingOrder(false);
       setOrder(result.data);
     };
     fetchOrder();
   }, []);
 
   const OrderList = () => {
-    if (order && order.length != 0) {
+    if (order && order.length > 0) {
       return order.map((oneOrder, index) => {
-        console.log(oneOrder);
         return (
           <tr
             className="hover-pointer"
@@ -33,9 +35,12 @@ function HomePage() {
           </tr>
         );
       });
-    } else {
-      return <h4>Loading Order..</h4>;
     }
+  };
+
+  const OrderStatus = () => {
+    if (loadingOrder) return <h4>Loading Order..</h4>;
+    else if (order.length == 0) return <h4>List Empty</h4>;
   };
 
   return (
@@ -52,6 +57,7 @@ function HomePage() {
         </thead>
         <tbody>
           <OrderList />
+          <OrderStatus />
         </tbody>
       </table>
     </>
