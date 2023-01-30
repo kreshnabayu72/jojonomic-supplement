@@ -1,0 +1,61 @@
+selectedDetailSupplier
+0: 
+    company_id: 
+    26036
+    created_at    : 
+    1674482035101
+    created_by    : 
+    163425
+    id    : 
+    "jc-84bTVR"
+    id_detail_supplier    : 
+    "jc-84bTVR"
+    id_produk    : 
+    {id: 'c9fvSTTVg', name: 'JAGUNG BIASA  WHL'}
+    id_supplier    : 
+    {id: 'NVZgGbo4R', name: 'M Opik'}
+    updated_at    : 
+    1674482035101
+    updated_by: 
+    163425
+
+
+listDetailTotal
+0: 
+    company_id: 
+    0
+    created_at: 
+    1675038397041
+    created_by: 
+    0
+    id    : 
+    "1atKQi04R"
+    id_detail_total_order_pembagian    : 
+    "1atKQi04R"
+    id_produk    : 
+    {id: 'c9fvSTTVg', name: 'JAGUNG BIASA  WHL'}
+    id_total_order_pembagian    : 
+    {id: 'k8cKwm0Vg', name: 'k8cKwm0Vg'}
+    jumlah_barang    : 
+    6000
+    unit    : 
+    "KG/1000"
+    updated_at    : 
+    1675038402472
+    updated_by    : 
+    0
+
+jumlahPerBarang:
+    JAGUNG BIASA WHL    : 
+    2
+    LOBAK BESAR DAIKON WHL    : 
+    1
+
+resultPembagian:
+
+Jatah Quantity: 
+3000
+Nama Produk: 
+"JAGUNG BIASA  WHL"
+Nama Supplier: 
+"M Opik"
