@@ -27,6 +27,7 @@ function HomePage() {
           <tr
             className="hover-pointer"
             onClick={() => nav(`/order/${oneOrder.id}`)}
+            key={index}
           >
             <td>{index + 1}</td>
             <td>{oneOrder.id}</td>
@@ -39,8 +40,22 @@ function HomePage() {
   };
 
   const OrderStatus = () => {
-    if (loadingOrder) return <h4>Loading Order..</h4>;
-    else if (order.length == 0) return <h4>List Empty</h4>;
+    if (loadingOrder)
+      return (
+        <tr>
+          <td>
+            <h4>Loading Order..</h4>
+          </td>
+        </tr>
+      );
+    else if (order.length == 0)
+      return (
+        <tr>
+          <td>
+            <h4>List Empty</h4>
+          </td>
+        </tr>
+      );
   };
 
   return (
