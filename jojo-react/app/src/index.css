@@ -44,3 +44,8 @@ table, th, td {
 .success{
   color: rgb(61, 151, 61);
 }
+
+.flex{
+  display: flex;
+}
+

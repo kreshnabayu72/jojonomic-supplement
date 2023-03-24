@@ -43,7 +43,6 @@ function BetterUploadPage() {
       );
       setLoadingExisting(false);
       setOrderExist(result.data.exist);
-      console.log(result.data);
       return result.data;
     };
     if (data) {

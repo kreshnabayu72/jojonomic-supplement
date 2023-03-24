@@ -15,7 +15,7 @@ function HomePage() {
         "https://gateway.jojonomic.com/v1/nocode/api/ims/order"
       );
       setLoadingOrder(false);
-      setOrder(result.data);
+      setOrder(result.data.sort((a, b) => b.created_at - a.created_at));
     };
     fetchOrder();
   }, []);
@@ -33,6 +33,10 @@ function HomePage() {
             <td>{oneOrder.id}</td>
             <td>{oneOrder.nomorpo}</td>
             <td>{new Date(oneOrder.tanggal).toLocaleDateString()}</td>
+            <td>
+              {new Date(oneOrder.created_at).toLocaleDateString("en-gb")}{" "}
+              {new Date(oneOrder.created_at).toLocaleTimeString("en-gb")}
+            </td>
           </tr>
         );
       });
@@ -60,14 +64,15 @@ function HomePage() {
 
   return (
     <>
-      HomePage
+      <h1>LIST ORDER</h1>
       <table>
         <thead>
           <tr>
             <th>No</th>
             <th>ID</th>
             <th>Nomor PO</th>
-            <th>Tanggal</th>
+            <th>Tanggal Order</th>
+            <th>Tanggal Upload</th>
           </tr>
         </thead>
         <tbody>

@@ -28,7 +28,7 @@ const Navbar = () => {
   };
   return (
     <nav>
-      <a href="/">Home</a>
+      <a href="/">List Order</a>
       <a href="/upload">Upload</a>
       <a href="/bagi-order">Pembagian Order</a>
       <button onClick={logoutHandler}>Logout</button>

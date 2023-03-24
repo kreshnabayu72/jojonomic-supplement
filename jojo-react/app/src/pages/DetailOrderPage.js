@@ -8,6 +8,7 @@ function DetailOrderPage() {
   const [list, setList] = useState();
   const [dataFaktur, setDataFaktur] = useState();
   const [dataBTB, setDataBTB] = useState();
+  const [dataPO, setDataPO] = useState();
 
   const params = useParams();
 
@@ -32,8 +33,7 @@ function DetailOrderPage() {
           plu: detailOrder.plu,
           Barang: detailOrder.nama_produk,
           unit: detailOrder.unit,
-          QTY: detailOrder.jumlah_barang,
-          "QTY Di Terima": "",
+          QTY: "",
           harga: detailOrder.harga,
           jumlah: "",
         };
@@ -45,13 +45,26 @@ function DetailOrderPage() {
           plu: detailOrder.plu,
           Barang: detailOrder.nama_produk,
           unit: detailOrder.unit,
-          QTY: detailOrder.jumlah_barang,
-
+          QTY: "",
           harga: detailOrder.harga,
           jumlah: detailOrder.total,
         };
       });
       setDataFaktur(faktur);
+
+      let dataPO = list.map((detail, index) => {
+        return {
+          No: index + 1,
+          Tanggal: new Date(detail.tanggal).toLocaleDateString(),
+          Produk: detail.id_produk.name,
+          PLU: detail.plu,
+          Harga: detail.harga,
+          Quantity: detail.jumlah_barang,
+          Unit: detail.unit,
+          Total: detail.total,
+        };
+      });
+      setDataPO(dataPO);
     }
   }, [list]);
 
@@ -91,7 +104,6 @@ function DetailOrderPage() {
 
   return (
     <>
-      DetailOrderPage
       <table>
         <thead>
           <tr>
@@ -114,6 +126,7 @@ function DetailOrderPage() {
       <h1>Download:</h1>
       <button onClick={() => ExportExcel(dataBTB, "BTB")}>BTB</button>
       <button onClick={() => ExportExcel(dataFaktur, "Faktur")}>Faktur</button>
+      <button onClick={() => ExportExcel(dataPO, "PO")}>DataPO</button>
     </>
   );
 }
