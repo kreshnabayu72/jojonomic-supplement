@@ -18,6 +18,7 @@ function BagiOrderPage() {
   const [loadingHasilPembagian, setLoadingHasilPembagian] = useState(false);
   const [loadingNewSupplier, setLoadingNewSupplier] = useState(false);
   const [showTotal, setShowTotal] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
 
   const [selectedOrder, setSelectedOrder] = useState([]);
   const [selectedHasilPembagian, setSelectedHasilPembagian] = useState([]);
@@ -154,6 +155,8 @@ function BagiOrderPage() {
       <TotalOrderTable
         listDetailTotal={listDetailTotal}
         setListDetailTotal={setListDetailTotal}
+        selectedSupplier={selectedSupplier}
+        setSelectedSupplier={setSelectedSupplier}
         BagiPesananHandler={BagiPesananHandler}
         loadingTotalOrder={loadingTotalOrder}
         selectedHasilPembagian={selectedHasilPembagian}

@@ -5,29 +5,44 @@ import { useEffect, useState } from "react";
 const TotalOrderTable = ({
   listDetailTotal,
   setListDetailTotal,
+  selectedSupplier,
+  setSelectedSupplier,
   BagiPesananHandler,
   detailSupplier,
   loadingNewSupplier,
 }) => {
-  const tempData = listDetailTotal;
-
-  const AddSupplier = (detailIndex) => {
-    const temp = tempData.map((detail, index) => {
-      if (index === detailIndex) {
-        detail.supplier.push({
+  useEffect(() => {
+    const supplier = listDetailTotal.map((detail) => {
+      return [
+        {
           id_supplier: { id: false, name: false },
           id_produk: detail.id_produk,
           unit: detail.unit,
           jumlah: 0,
-        });
-      }
-      return detail;
+        },
+      ];
     });
-    setListDetailTotal(temp);
+    if (!selectedSupplier || selectedSupplier.length < 1)
+      setSelectedSupplier(supplier);
+  }, [listDetailTotal]);
+
+  const AddSupplier = (detailIndex) => {
+    console.log("ADDD?");
+    setSelectedSupplier((prevState) => {
+      prevState[detailIndex].push({
+        id_supplier: { id: false, name: false },
+        id_produk: "detail.id_produk",
+        unit: "detail.unit",
+        jumlah: 0,
+      });
+      return prevState;
+    });
+
+    console.log("SELECTEDSUPAFTERADD", selectedSupplier);
   };
 
   const DeleteSelectedSupplier = (supplierIndex, detailIndex) => {
-    const temp = tempData.map((detail, index) => {
+    const temp = listDetailTotal.map((detail, index) => {
       if (index === detailIndex) {
         detail.supplier.splice(supplierIndex, 1);
       }
@@ -52,7 +67,7 @@ const TotalOrderTable = ({
               value={JSON.stringify(supplier["id_supplier"])}
               onChange={(e) => {
                 supplier["id_supplier"] = e.target.value;
-                setListDetailTotal(tempData);
+                setListDetailTotal(listDetailTotal);
               }}
             >
               <option value={{ id: false, name: false }}>-</option>
@@ -72,16 +87,10 @@ const TotalOrderTable = ({
               type="number"
               placeholder={`Jumlah barang... ${supplierIndex}`}
               onChange={(e) => {
-                setListDetailTotal((prevState) => {
-                  return prevState.map((detail, index) => {
-                    if (index === detailIndex) {
-                      detail.supplier[supplierIndex].jumlah = e.target.value;
-                    }
-                    return detail;
-                  });
+                setSelectedSupplier((prevState) => {
+                  prevState[detailIndex][supplierIndex].jumlah = e.target.value;
+                  return prevState;
                 });
-
-                console.log("ldt", listDetailTotal);
               }}
               value={supplier.jumlah}
             />
@@ -112,23 +121,24 @@ const TotalOrderTable = ({
 
   const TotalOrderList = () => {
     if (listDetailTotal)
-      return tempData.map((detailTotal, index) => {
+      return listDetailTotal.map((detailTotal, index) => {
         return (
           <tr key={index}>
             <td>{index + 1}</td>
             <td>{detailTotal?.id_produk.name}</td>
             <td>{detailTotal?.jumlah_barang}</td>
             <td>{detailTotal?.unit}</td>
-            {detailTotal?.supplier.map((supplier, supplierIndex) => (
-              <SupplierList
-                key={supplierIndex}
-                detailTotal={listDetailTotal}
-                supplierList={detailTotal.supplier}
-                supplier={supplier}
-                supplierIndex={supplierIndex}
-                detailIndex={index}
-              />
-            ))}
+            {selectedSupplier[index]?.map((supplier, supplierIndex) => {
+              return (
+                <SupplierList
+                  key={supplierIndex}
+                  supplierList={selectedSupplier}
+                  supplier={supplier}
+                  supplierIndex={supplierIndex}
+                  detailIndex={index}
+                />
+              );
+            })}
           </tr>
         );
       });
