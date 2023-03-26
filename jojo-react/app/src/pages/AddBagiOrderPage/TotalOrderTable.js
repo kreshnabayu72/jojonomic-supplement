@@ -5,57 +5,28 @@ import { useEffect, useState } from "react";
 const TotalOrderTable = ({
   listDetailTotal,
   setListDetailTotal,
-  selectedSupplier,
-  setSelectedSupplier,
   BagiPesananHandler,
   detailSupplier,
   loadingNewSupplier,
 }) => {
-  useEffect(() => {
-    const supplier = listDetailTotal.map((detail) => {
-      return [
-        {
+  const AddSupplier = (detailIndex) => {
+    const temp = [...listDetailTotal].map((detail, index) => {
+      if (index === detailIndex) {
+        detail.supplier.push({
           id_supplier: { id: false, name: false },
           id_produk: detail.id_produk,
           unit: detail.unit,
           jumlah: 0,
-        },
-      ];
-    });
-    console;
-    setSelectedSupplier(supplier);
-  }, [listDetailTotal]);
-
-  const AddSupplier = (detailIndex) => {
-    const result = listDetailTotal.map((detail, index) => {
-      if (detailIndex === index) {
-        console.log("ADDD?");
-        setSelectedSupplier((prevState) => {
-          prevState[detailIndex].push({
-            id_supplier: { id: false, name: false },
-            id_produk: detail.id_produk,
-            unit: detail.unit,
-            jumlah: 0,
-          });
-          return prevState;
         });
       }
       return detail;
     });
-
-    setListDetailTotal(result);
-
-    console.log("SELECTEDSUP", selectedSupplier);
+    setListDetailTotal(temp);
   };
 
   const DeleteSelectedSupplier = (supplierIndex, detailIndex) => {
-    const temp = listDetailTotal.map((detail, index) => {
-      if (index === detailIndex) {
-        detail.supplier.splice(supplierIndex, 1);
-      }
-      return detail;
-    });
-
+    const temp = [...listDetailTotal];
+    temp[0].supplier.splice(supplierIndex, 1);
     setListDetailTotal(temp);
   };
 
@@ -91,23 +62,29 @@ const TotalOrderTable = ({
                 })}
             </select>
             <input
+              key={`input ${supplierIndex} ${detailIndex}`}
               type="number"
               placeholder={`Jumlah barang... ${supplierIndex}`}
               onChange={(e) => {
-                setSelectedSupplier((prevState) => {
-                  prevState[detailIndex][supplierIndex].jumlah = e.target.value;
-                  return prevState;
+                setListDetailTotal((prevState) => {
+                  return prevState.map((detail, index) => {
+                    if (index === detailIndex) {
+                      detail.supplier[supplierIndex].jumlah = e.target.value;
+                    }
+                    return detail;
+                  });
                 });
-
-                console.log("selecsup", selectedSupplier);
               }}
               value={supplier.jumlah}
+              onFocus={(e) => {
+                console.log("fokus");
+              }}
             />
             {supplierList?.length > 1 && (
               <button
                 className="btn btn-danger"
                 onClick={() =>
-                  DeleteSelectedSupplier(supplier, supplierIndex, detailIndex)
+                  DeleteSelectedSupplier(supplierIndex, detailIndex)
                 }
               >
                 <TrashFill />
@@ -137,18 +114,15 @@ const TotalOrderTable = ({
             <td>{detailTotal?.id_produk.name}</td>
             <td>{detailTotal?.jumlah_barang}</td>
             <td>{detailTotal?.unit}</td>
-            {selectedSupplier[index]?.map((supplier, supplierIndex) => {
-              console.log("SUPPLIER", supplierIndex);
-              return (
-                <SupplierList
-                  key={supplierIndex}
-                  supplierList={selectedSupplier}
-                  supplier={supplier}
-                  supplierIndex={supplierIndex}
-                  detailIndex={index}
-                />
-              );
-            })}
+            {detailTotal?.supplier.map((supplier, supplierIndex) => (
+              <SupplierList
+                detailTotal={listDetailTotal}
+                supplierList={detailTotal.supplier}
+                supplier={supplier}
+                supplierIndex={supplierIndex}
+                detailIndex={index}
+              />
+            ))}
           </tr>
         );
       });
