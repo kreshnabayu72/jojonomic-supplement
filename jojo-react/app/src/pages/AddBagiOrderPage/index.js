@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Plus, TrashFill } from "react-bootstrap-icons";
+import Loading from "../../components/Loading";
+import AddOrRemoveButton from "../../components/AddOrRemoveButton";
+import RemoveButton from "../../components/RemoveButton";
 import OrderTable from "./OrderTable";
 import SelectedOrderTable from "./SelectedOrderTable";
 import TotalOrderTable from "./TotalOrderTable";
-import ResultTable from "./ResultTable";
 
 function BagiOrderPage() {
   const [order, setOrder] = useState([]);
@@ -48,6 +51,59 @@ function BagiOrderPage() {
     fetchDetailSupplier();
   }, []);
 
+  useEffect(() => {
+    if (listDetailTotal.length > 0)
+      setSelectedHasilPembagian(
+        listDetailTotal.map((total) => {
+          return [
+            {
+              id_supplier: { id: false, name: false },
+              id_produk: total.id_produk,
+              unit: total.unit,
+              jumlah: 0,
+            },
+          ];
+        })
+      );
+  }, [listDetailTotal]);
+
+  const ResultTable = () => {
+    const ResultList = () => {
+      if (hasilPembagian && hasilPembagian.length > 0) {
+        return hasilPembagian.map((oneHasil, index) => {
+          return (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{oneHasil["id_supplier"]["name"]}</td>
+              <td>{oneHasil["id_produk"]["name"]}</td>
+              <td>{oneHasil["jumlah"]}</td>
+            </tr>
+          );
+        });
+      }
+    };
+
+    if (hasilPembagian && hasilPembagian.length > 0)
+      return (
+        <>
+          <h1>Hasil Pembagian:</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Supplier</th>
+                <th>Produk</th>
+                <th>Jumlah</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ResultList />
+            </tbody>
+          </table>
+        </>
+      );
+  };
+
   // Handlers
   const OrderTotalHandler = async () => {
     setShowTotal(!showTotal);
@@ -70,22 +126,7 @@ function BagiOrderPage() {
     );
 
     setLoadingTotalOrder(false);
-
-    setListDetailTotal(
-      result2.data.map((total) => {
-        return {
-          ...total,
-          supplier: [
-            {
-              id_supplier: { id: false, name: false },
-              id_produk: total.id_produk,
-              unit: total.unit,
-              jumlah: 0,
-            },
-          ],
-        };
-      })
-    );
+    setListDetailTotal(result2.data);
   };
 
   const BagiPesananHandler = async () => {
@@ -152,11 +193,9 @@ function BagiOrderPage() {
         OrderTotalHandler={OrderTotalHandler}
         loadingTotalOrder={loadingTotalOrder}
       />
+
       <TotalOrderTable
         listDetailTotal={listDetailTotal}
-        setListDetailTotal={setListDetailTotal}
-        selectedSupplier={selectedSupplier}
-        setSelectedSupplier={setSelectedSupplier}
         BagiPesananHandler={BagiPesananHandler}
         loadingTotalOrder={loadingTotalOrder}
         selectedHasilPembagian={selectedHasilPembagian}
@@ -164,10 +203,8 @@ function BagiOrderPage() {
         detailSupplier={detailSupplier}
         loadingNewSupplier={loadingNewSupplier}
       />
-      <ResultTable
-        hasilPembagian={hasilPembagian}
-        loadingHasilPembagian={loadingHasilPembagian}
-      />
+      <Loading isLoading={loadingHasilPembagian} />
+      <ResultTable />
     </>
   );
 }

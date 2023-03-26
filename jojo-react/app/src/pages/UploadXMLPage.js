@@ -140,13 +140,6 @@ function BetterUploadPage() {
 
   const DetailOrderList = () => {
     if (data) {
-      if (!Array.isArray(data.po.po_detail)) {
-        setData({
-          ...data,
-          po: { ...data.po, po_detail: [data.po.po_detail] },
-        });
-      }
-
       return data.po.po_detail.map((detail, index) => {
         return (
           <tr key={index}>
