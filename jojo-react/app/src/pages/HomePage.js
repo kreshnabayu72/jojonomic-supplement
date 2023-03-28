@@ -8,15 +8,22 @@ function HomePage() {
 
   const nav = useNavigate();
 
+  const fetchOrder = async (filter = {}) => {
+    setLoadingOrder(true);
+    let result = await axios.get(
+      "https://gateway.jojonomic.com/v1/nocode/api/ims/order"
+    );
+    result = result.data.sort((a, b) => b.created_at - a.created_at);
+
+    if (filter.fromDate) {
+      result = await result.filter((data) => data.created_at < filter.fromDate);
+    }
+
+    setOrder(result);
+    setLoadingOrder(false);
+  };
+
   useEffect(() => {
-    const fetchOrder = async () => {
-      setLoadingOrder(true);
-      const result = await axios.get(
-        "https://gateway.jojonomic.com/v1/nocode/api/ims/order"
-      );
-      setLoadingOrder(false);
-      setOrder(result.data.sort((a, b) => b.created_at - a.created_at));
-    };
     fetchOrder();
   }, []);
 
@@ -64,7 +71,24 @@ function HomePage() {
 
   return (
     <>
-      <h1>LIST ORDER</h1>
+      <h4 className="mt-2">LIST ORDER</h4>
+
+      <div className="row">
+        <div className="col-3 mt-auto">
+          <div className="row justify-content-center">
+            <button>Seminggu Terakhir</button>
+            <button>Sebulan Terakhir</button>
+          </div>
+        </div>
+        <div className="col-2 d-flex flex-column">
+          <label htmlFor="month-select"> Pilih Bulan & Tahun</label>
+          <input type="month" name="month-select" id="month-select" />
+          <button onClick={() => fetchOrder({ fromDate: 1679275387206 })}>
+            Filter
+          </button>
+        </div>
+      </div>
+
       <table>
         <thead>
           <tr>

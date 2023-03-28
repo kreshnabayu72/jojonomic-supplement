@@ -68,8 +68,10 @@ function App() {
           path="/"
           element={
             <IsLoggedIn>
-              <Navbar />
-              <HomePage />
+              <div className="container">
+                <Navbar />
+                <HomePage />
+              </div>
             </IsLoggedIn>
           }
         />
@@ -79,8 +81,10 @@ function App() {
           path="/upload"
           element={
             <IsLoggedIn>
-              <Navbar />
-              <UploadXMLPage />
+              <div className="container">
+                <Navbar />
+                <UploadXMLPage />
+              </div>
             </IsLoggedIn>
           }
         />
@@ -89,8 +93,10 @@ function App() {
           path="/order/:id"
           element={
             <IsLoggedIn>
-              <Navbar />
-              <DetailOrderPage />
+              <div className="container">
+                <Navbar />
+                <DetailOrderPage />
+              </div>
             </IsLoggedIn>
           }
         />
@@ -99,8 +105,10 @@ function App() {
           path="/old-bagi-order"
           element={
             <IsLoggedIn>
-              <Navbar />
-              <OldAddBagiOrderPage />
+              <div className="container">
+                <Navbar />
+                <OldAddBagiOrderPage />
+              </div>
             </IsLoggedIn>
           }
         />
@@ -109,8 +117,10 @@ function App() {
           path="/bagi-order"
           element={
             <IsLoggedIn>
-              <Navbar />
-              <AddBagiOrderPage />
+              <div className="container">
+                <Navbar />
+                <AddBagiOrderPage />
+              </div>
             </IsLoggedIn>
           }
         />
@@ -119,8 +129,10 @@ function App() {
           path="/bagi-order/list"
           element={
             <IsLoggedIn>
-              <Navbar />
-              <BagiOrderListPage />
+              <div className="container">
+                <Navbar />
+                <BagiOrderListPage />
+              </div>
             </IsLoggedIn>
           }
         />
@@ -129,8 +141,10 @@ function App() {
           path="/pemenuhanOrder/:id"
           element={
             <IsLoggedIn>
-              <Navbar />
-              <DetailPemenuhanOrderPage />
+              <div className="container">
+                <Navbar />
+                <DetailPemenuhanOrderPage />
+              </div>
             </IsLoggedIn>
           }
         />
