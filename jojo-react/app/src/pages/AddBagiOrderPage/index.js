@@ -4,13 +4,15 @@ import axios from "axios";
 import OrderTable from "./OrderTable";
 import SelectedOrderTable from "./SelectedOrderTable";
 import TotalOrderTable from "./TotalOrderTable";
-import ResultTable from "./ResultTable";
+// import ResultTable from "./ResultTable";
+import Loading from "../../components/Loading";
 
 function BagiOrderPage() {
   const [order, setOrder] = useState([]);
   const [detailSupplier, setDetailSupplier] = useState([]);
   const [listDetailTotal, setListDetailTotal] = useState([]);
   const [hasilPembagian, setHasilPembagian] = useState([]);
+  const [kekuranganSupplier, setKekuranganSupplier] = useState([]);
 
   const [loadingOrder, setLoadingOrder] = useState(false);
   const [loadingTotalOrder, setLoadingTotalOrder] = useState(false);
@@ -20,7 +22,6 @@ function BagiOrderPage() {
   const [showTotal, setShowTotal] = useState(false);
 
   const [selectedOrder, setSelectedOrder] = useState([]);
-  const [selectedHasilPembagian, setSelectedHasilPembagian] = useState([]);
 
   const nav = useNavigate();
 
@@ -47,6 +48,92 @@ function BagiOrderPage() {
     fetchDetailSupplier();
   }, []);
 
+  const ResultTable = () => {
+    const ResultList = () => {
+      if (hasilPembagian && hasilPembagian.length > 0) {
+        return hasilPembagian.map((oneHasil, index) => {
+          if (oneHasil.jumlah > 0)
+            return (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{oneHasil["id_supplier"]["name"] || ""}</td>
+                <td>{oneHasil["id_produk"]["name"] || ""}</td>
+                <td>{oneHasil["jumlah"]}</td>
+                <td>{oneHasil["unit"]}</td>
+              </tr>
+            );
+          else return <tr key={index}>Data pembagian kosong</tr>;
+        });
+      }
+    };
+    const KoreksiList = () => {
+      if (kekuranganSupplier && kekuranganSupplier.length > 0) {
+        return kekuranganSupplier.map((oneHasil, index) => {
+          return (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{oneHasil?.id_produk.name || ""}</td>
+              <td>{oneHasil?.jumlah}</td>
+              <td>{oneHasil?.unit}</td>
+            </tr>
+          );
+        });
+      }
+    };
+
+    const PembagianTable = () => {
+      if (hasilPembagian && hasilPembagian.length > 0)
+        return (
+          <div>
+            <h4>Pembagian Per Supplier</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama Supplier</th>
+                  <th>Produk</th>
+                  <th>Jumlah</th>
+                  <th>Unit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ResultList />
+              </tbody>
+            </table>
+          </div>
+        );
+    };
+
+    const KoreksiTable = () => {
+      if (kekuranganSupplier && kekuranganSupplier.length > 0)
+        return (
+          <div>
+            <h4>Koreksi/Kekurangan</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Produk</th>
+                  <th>Jumlah</th>
+                  <th>Unit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <KoreksiList />
+              </tbody>
+            </table>
+          </div>
+        );
+    };
+
+    return (
+      <>
+        <PembagianTable />
+        <KoreksiTable />
+      </>
+    );
+  };
+
   // Handlers
   const OrderTotalHandler = async () => {
     setShowTotal(!showTotal);
@@ -69,69 +156,84 @@ function BagiOrderPage() {
     );
 
     setLoadingTotalOrder(false);
-
-    setListDetailTotal(
-      result2.data.map((total) => {
-        return {
-          ...total,
-          supplier: [
-            {
-              id_supplier: { id: false, name: false },
-              id_produk: total.id_produk,
-              unit: total.unit,
-              jumlah: 0,
-            },
-          ],
-        };
-      })
-    );
+    setListDetailTotal(result2.data);
   };
 
-  const BagiPesananHandler = async () => {
-    console.log("bagipesanan", selectedHasilPembagian);
-    // const jumlahSupplierPerBarang = selectedDetailSupplier.reduce(
-    //   (a, { id_produk }) =>
-    //     (a[id_produk.name] = a[id_produk.name] + 1 || 1) && a,
-    //   {}
-    // );
-    // let resultPembagian = [];
-    // listDetailTotal.map((detailTotal) => {
-    //   const detailSuppliers = selectedDetailSupplier.filter(
-    //     (e) => e.id_produk.name === detailTotal.id_produk.name
-    //   );
-    //   if (
-    //     jumlahSupplierPerBarang[detailTotal.id_produk.name] > 0 &&
-    //     detailSuppliers.length > 0
-    //   ) {
-    //     detailSuppliers.map((detailSupplier) => {
-    //       resultPembagian.push({
-    //         id_supplier: detailSupplier.id_supplier,
-    //         id_produk: detailSupplier.id_produk,
-    //         unit: detailTotal.unit,
-    //         jumlah:
-    //           detailTotal.jumlah_barang /
-    //           jumlahSupplierPerBarang[detailTotal.id_produk.name],
-    //       });
-    //     });
-    //   } else {
-    //     resultPembagian.push({
-    //       id_supplier: { id: "NONE", name: "KEKURANGAN" },
-    //       id_produk: detailTotal.id_produk,
-    //       unit: detailTotal.unit,
-    //       jumlah: detailTotal.jumlah_barang,
-    //     });
-    //   }
-    // });
-    // const ObjekHasil = {
-    //   result: resultPembagian,
-    // };
-    // setLoadingHasilPembagian(true);
-    // await axios.post(
-    //   "https://api-oos.jojonomic.com/26036/pemenuhan-pesanan-old",
-    //   ObjekHasil
-    // );
-    // setLoadingHasilPembagian(false);
-    // setHasilPembagian(resultPembagian);
+  Array.prototype.flatten = function () {
+    var ret = [];
+    for (var i = 0; i < this.length; i++) {
+      if (Array.isArray(this[i])) {
+        ret = ret.concat(this[i].flatten());
+      } else {
+        ret.push(this[i]);
+      }
+    }
+    return ret;
+  };
+
+  const BagiPesananHandler = async (listDetailTotal, selectedSupplier) => {
+    const sumData = selectedSupplier.map((productSuppliers) => {
+      return productSuppliers.reduce(
+        (a, b) => {
+          return { ...b, jumlah: a.jumlah + b.jumlah };
+        },
+        { jumlah: 0 }
+      );
+    });
+
+    const kurang = [...listDetailTotal]
+      .map((totalOrder, index) => {
+        console.log("sumData[index].jumlah", sumData[index].jumlah);
+        console.log("index", index);
+        console.log("sumdata", sumData);
+        let jumlah_kurang = totalOrder.jumlah_barang - sumData[index].jumlah;
+
+        if (jumlah_kurang > 0) {
+          return {
+            id_produk: totalOrder.id_produk,
+            id_supplier: { id: false, name: "Koreksi" },
+            unit: totalOrder.unit,
+            jumlah: jumlah_kurang,
+          };
+        } else if (jumlah_kurang < 0) {
+          console.log("JUMLAHKURANG", jumlah_kurang);
+          console.log("totalorderjumlah", totalOrder.jumlah_barang);
+
+          //Jangan post harusnya
+          return {
+            id_produk: totalOrder.id_produk,
+            id_supplier: { id: false, name: "Kelebihan Supply" },
+            unit: totalOrder.unit,
+            jumlah: -1 * jumlah_kurang,
+          };
+        } else {
+          return {
+            id_produk: totalOrder.id_produk,
+            id_supplier: { id: false, name: false },
+            unit: totalOrder.unit,
+            jumlah: 0,
+          };
+        }
+      })
+      .filter((kurang) => kurang.jumlah !== null && kurang.jumlah !== 0);
+
+    const processedData = await selectedSupplier
+      .flatten()
+      .filter((data) => data.id_supplier.id !== false);
+
+    console.log("processed", processedData);
+    console.log("kurang", kurang);
+
+    const fullData = [...processedData, ...kurang];
+
+    setLoadingHasilPembagian(true);
+    await axios.post("https://api-oos.jojonomic.com/26036/pemenuhan-pesanan", {
+      result: fullData,
+    });
+
+    setKekuranganSupplier(kurang);
+    setHasilPembagian(processedData);
+    setLoadingHasilPembagian(false);
   };
 
   return (
@@ -156,15 +258,11 @@ function BagiOrderPage() {
         setListDetailTotal={setListDetailTotal}
         BagiPesananHandler={BagiPesananHandler}
         loadingTotalOrder={loadingTotalOrder}
-        selectedHasilPembagian={selectedHasilPembagian}
-        setSelectedHasilPembagian={setSelectedHasilPembagian}
         detailSupplier={detailSupplier}
         loadingNewSupplier={loadingNewSupplier}
       />
-      <ResultTable
-        hasilPembagian={hasilPembagian}
-        loadingHasilPembagian={loadingHasilPembagian}
-      />
+      <Loading isLoading={loadingHasilPembagian} />
+      <ResultTable />
     </>
   );
 }

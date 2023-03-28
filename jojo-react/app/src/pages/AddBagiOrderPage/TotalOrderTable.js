@@ -9,32 +9,50 @@ const TotalOrderTable = ({
   detailSupplier,
   loadingNewSupplier,
 }) => {
-  const AddSupplier = (detailIndex) => {
-    const temp = [...listDetailTotal].map((detail, index) => {
+  const [selectedSupplier, setSelectedSupplier] = useState([]);
+
+  useEffect(() => {
+    const temp = [...listDetailTotal].map((total) => {
+      return [
+        {
+          id_supplier: { id: false, name: false },
+          id_produk: total.id_produk,
+          unit: total.unit,
+          jumlah: 0,
+        },
+      ];
+    });
+    setSelectedSupplier(temp);
+  }, [listDetailTotal]);
+
+  const AddSelectedSupplier = (detailIndex) => {
+    const temp = [...selectedSupplier];
+
+    listDetailTotal.map((detail, index) => {
       if (index === detailIndex) {
-        detail.supplier.push({
+        temp[index].push({
           id_supplier: { id: false, name: false },
           id_produk: detail.id_produk,
           unit: detail.unit,
           jumlah: 0,
         });
       }
-      return detail;
     });
-    setListDetailTotal(temp);
+
+    setSelectedSupplier(temp);
   };
 
-  const DeleteSelectedSupplier = (supplierIndex, detailIndex) => {
-    const temp = [...listDetailTotal];
-    temp[0].supplier.splice(supplierIndex, 1);
-    setListDetailTotal(temp);
+  const DeleteSelectedSupplier = (supplierIndex, productIndex) => {
+    const temp = [...selectedSupplier];
+    temp[productIndex].splice(supplierIndex, 1);
+    setSelectedSupplier(temp);
   };
 
   const SupplierList = ({
-    supplierList,
+    productSupplier,
     supplier,
     supplierIndex,
-    detailIndex,
+    productIndex,
   }) => {
     return (
       <td style={{ minHeight: "10rem" }}>
@@ -44,47 +62,47 @@ const TotalOrderTable = ({
               style={{ minWidth: "7rem" }}
               value={JSON.stringify(supplier["id_supplier"])}
               onChange={(e) => {
-                supplier["id_supplier"] = e.target.value;
-                setListDetailTotal(listDetailTotal);
+                let temp = [...selectedSupplier];
+                temp[productIndex][supplierIndex].id_supplier = JSON.parse(
+                  e.target.value
+                );
+                setSelectedSupplier(temp);
               }}
             >
-              <option value={{ id: false, name: false }}>-</option>
+              <option value={JSON.stringify({ id: false, name: false })}>
+                -
+              </option>
               {detailSupplier &&
-                detailSupplier.map((supplier) => {
-                  return (
-                    <option
-                      value={supplier.id_supplier}
-                      key={supplier.id_supplier.id}
-                    >
-                      {supplier.id_supplier.name}
-                    </option>
-                  );
+                detailSupplier.map((oneSupplier) => {
+                  if (oneSupplier.id_produk.name === supplier.id_produk.name)
+                    return (
+                      <option
+                        value={JSON.stringify(oneSupplier.id_supplier)}
+                        key={oneSupplier.id_supplier.id}
+                      >
+                        {oneSupplier.id_supplier.name}
+                      </option>
+                    );
                 })}
             </select>
             <input
-              key={`input ${supplierIndex} ${detailIndex}`}
+              key={`IN${supplierIndex}${productIndex}`}
+              name={`inputtext ${supplierIndex} ${productIndex}`}
               type="number"
               placeholder={`Jumlah barang... ${supplierIndex}`}
               onChange={(e) => {
-                setListDetailTotal((prevState) => {
-                  return prevState.map((detail, index) => {
-                    if (index === detailIndex) {
-                      detail.supplier[supplierIndex].jumlah = e.target.value;
-                    }
-                    return detail;
-                  });
-                });
+                let temp = [...selectedSupplier];
+                temp[productIndex][supplierIndex].jumlah =
+                  parseInt(e.target.value) || 0;
+                setSelectedSupplier(temp);
               }}
-              value={supplier.jumlah}
-              onFocus={(e) => {
-                console.log("fokus");
-              }}
+              value={parseInt(supplier.jumlah) || 0}
             />
-            {supplierList?.length > 1 && (
+            {selectedSupplier[productIndex]?.length > 1 && (
               <button
                 className="btn btn-danger"
                 onClick={() =>
-                  DeleteSelectedSupplier(supplierIndex, detailIndex)
+                  DeleteSelectedSupplier(supplierIndex, productIndex)
                 }
               >
                 <TrashFill />
@@ -94,7 +112,7 @@ const TotalOrderTable = ({
             <button
               className="btn btn-primary "
               onClick={() => {
-                AddSupplier(detailIndex);
+                AddSelectedSupplier(productIndex);
               }}
             >
               <Plus />
@@ -109,20 +127,31 @@ const TotalOrderTable = ({
     if (listDetailTotal)
       return listDetailTotal.map((detailTotal, index) => {
         return (
-          <tr key={index}>
+          <tr key={"tr" + index}>
             <td>{index + 1}</td>
             <td>{detailTotal?.id_produk.name}</td>
             <td>{detailTotal?.jumlah_barang}</td>
             <td>{detailTotal?.unit}</td>
-            {detailTotal?.supplier.map((supplier, supplierIndex) => (
-              <SupplierList
-                detailTotal={listDetailTotal}
-                supplierList={detailTotal.supplier}
-                supplier={supplier}
-                supplierIndex={supplierIndex}
-                detailIndex={index}
-              />
-            ))}
+          </tr>
+        );
+      });
+  };
+  const SelectSupplierList = () => {
+    if (selectedSupplier)
+      return selectedSupplier.map((suppliers, productIndex) => {
+        return (
+          <tr key={"tr" + productIndex}>
+            {suppliers?.map((supplier, supplierIndex) => {
+              return (
+                <SupplierList
+                  key={"supplierList" + supplierIndex}
+                  productSupplier={selectedSupplier[productIndex]}
+                  supplier={supplier}
+                  supplierIndex={supplierIndex}
+                  productIndex={productIndex}
+                />
+              );
+            })}
           </tr>
         );
       });
@@ -133,7 +162,7 @@ const TotalOrderTable = ({
       <div>
         <div>
           <h1>TOTAL PESANAN UNTUK DIBAGI:</h1>
-          <div className="row" style={{ margin: "auto" }}>
+          <div style={{ margin: "auto", display: "flex" }}>
             <table>
               <thead>
                 <tr>
@@ -147,8 +176,24 @@ const TotalOrderTable = ({
                 <TotalOrderList />
               </tbody>
             </table>
+            <table>
+              <thead>
+                <tr>
+                  <th>Supplier</th>
+                </tr>
+              </thead>
+              <tbody>
+                <SelectSupplierList />
+              </tbody>
+            </table>
           </div>
-          <button onClick={BagiPesananHandler}>Bagi pesanan</button>
+          <button
+            onClick={() =>
+              BagiPesananHandler(listDetailTotal, selectedSupplier)
+            }
+          >
+            Bagi pesanan
+          </button>
         </div>
       </div>
     );

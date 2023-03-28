@@ -1,7 +1,9 @@
 import Loading from "../../components/Loading";
+
 const ResultTable = ({ hasilPembagian, loadingHasilPembagian }) => {
   const ResultList = () => {
-    if (hasilPembagian && hasilPembagian.length > 0) {
+    console.log(hasilPembagian);
+    if (hasilPembagian) {
       return hasilPembagian.map((oneHasil, index) => {
         return (
           <tr key={index}>
@@ -12,8 +14,16 @@ const ResultTable = ({ hasilPembagian, loadingHasilPembagian }) => {
           </tr>
         );
       });
+    } else {
+      return (
+        <tr>
+          <td>WAIT(?)</td>
+        </tr>
+      );
     }
   };
+
+  console.log("hasilpemb", hasilPembagian);
 
   if (hasilPembagian && hasilPembagian.length > 0)
     return (
@@ -29,9 +39,18 @@ const ResultTable = ({ hasilPembagian, loadingHasilPembagian }) => {
               <th>Jumlah</th>
             </tr>
           </thead>
-          <tbody>
-            <ResultList />
-          </tbody>
+          {/* <tbody>
+            {hasilPembagian.map((oneHasil, index) => {
+              return (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{oneHasil["id_supplier"]["name"]}</td>
+                  <td>{oneHasil["id_produk"]["name"]}</td>
+                  <td>{oneHasil["jumlah"]}</td>
+                </tr>
+              );
+            })}
+          </tbody> */}
         </table>
       </>
     );

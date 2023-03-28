@@ -5,6 +5,7 @@ import {
   Navigate,
   useNavigate,
 } from "react-router-dom";
+import OldAddBagiOrderPage from "./pages/OldAddBagiOrderPage";
 import DetailOrderPage from "./pages/DetailOrderPage";
 import HomePage from "./pages/HomePage";
 import UploadXMLPage from "./pages/UploadXMLPage";
@@ -90,6 +91,16 @@ function App() {
             <IsLoggedIn>
               <Navbar />
               <DetailOrderPage />
+            </IsLoggedIn>
+          }
+        />
+        <Route
+          exact
+          path="/old-bagi-order"
+          element={
+            <IsLoggedIn>
+              <Navbar />
+              <OldAddBagiOrderPage />
             </IsLoggedIn>
           }
         />
